@@ -1,6 +1,7 @@
 import tkinter as tk
 from game import TicTacToeGame
 from ui import TicTacToeUI
+from online_ui import OnlineUI  # Import the new OnlineUI class
 
 class HomeScreen:
     def __init__(self, root):
@@ -35,7 +36,7 @@ class HomeScreen:
 
     def start_multiplayer_online(self):
         self.clear_screen()
-        self.start_game(mode="online")  # For now, it uses the same logic as regular multiplayer
+        OnlineUI(self.root, self)  # Create and show the OnlineUI
 
     def clear_screen(self):
         for widget in self.root.winfo_children():
@@ -44,7 +45,7 @@ class HomeScreen:
     def start_game(self, mode):
         if mode == "single":
             game = TicTacToeGame(ai_enabled=True)
-        elif mode in ["multi", "online"]:  # Both multiplayer modes (local and online) behave the same for now
+        elif mode in ["multi"]:  # Both multiplayer modes (local and online) behave the same for now
             game = TicTacToeGame(ai_enabled=False)
 
         TicTacToeUI(self.root, game, self)
