@@ -20,6 +20,11 @@ class HomeScreen:
                                  command=self.start_multiplayer)
         multi_button.pack(pady=10)
 
+        # New button for Multiplayer Online
+        online_multi_button = tk.Button(self.root, text="Multiplayer Online", font=("Arial", 18),
+                                        command=self.start_multiplayer_online)
+        online_multi_button.pack(pady=10)
+
     def start_single_player(self):
         self.clear_screen()
         self.start_game(mode="single")
@@ -28,6 +33,10 @@ class HomeScreen:
         self.clear_screen()
         self.start_game(mode="multi")
 
+    def start_multiplayer_online(self):
+        self.clear_screen()
+        self.start_game(mode="online")  # For now, it uses the same logic as regular multiplayer
+
     def clear_screen(self):
         for widget in self.root.winfo_children():
             widget.destroy()
@@ -35,7 +44,7 @@ class HomeScreen:
     def start_game(self, mode):
         if mode == "single":
             game = TicTacToeGame(ai_enabled=True)
-        else:
+        elif mode in ["multi", "online"]:  # Both multiplayer modes (local and online) behave the same for now
             game = TicTacToeGame(ai_enabled=False)
 
         TicTacToeUI(self.root, game, self)
