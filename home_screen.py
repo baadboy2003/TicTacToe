@@ -36,7 +36,7 @@ class HomeScreen:
 
     def start_multiplayer_online(self):
         self.clear_screen()
-        OnlineUI(self.root, self)  # Create and show the OnlineUI
+        OnlineUI(self.root, self)  # Create and show the OnlineUI same as ui but for online 
 
     def clear_screen(self):
         for widget in self.root.winfo_children():
@@ -45,7 +45,7 @@ class HomeScreen:
     def start_game(self, mode):
         if mode == "single":
             game = TicTacToeGame(ai_enabled=True)
-        elif mode in ["multi"]:  # Both multiplayer modes (local and online) behave the same for now
+        elif mode in ["multi"]:  
             game = TicTacToeGame(ai_enabled=False)
 
         TicTacToeUI(self.root, game, self)

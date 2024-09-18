@@ -2,13 +2,13 @@ import tkinter as tk
 import socket
 import threading
 
-PORT = 1000
-SERVER = socket.gethostbyname(socket.gethostname())
-ADDR = (SERVER, PORT)
-FORMAT = 'utf-8'
+PORT = 1000       #port for the server 
+SERVER = socket.gethostbyname(socket.gethostname()) # basiclly gets the ip of the local laptop 
+ADDR = (SERVER, PORT) # combines server and port   
+FORMAT = 'utf-8'      
 HEADER = 64
-DISCONNECT_MESSAGE = "D"
-GAME_OVER_MESSAGE = "GAME_OVER"
+DISCONNECT_MESSAGE = "D"  # message for disconnetion sent to the server 
+GAME_OVER_MESSAGE = "GAME_OVER" # message when the game is over 
 
 class OnlineUI:
     def __init__(self, root, home_screen):
@@ -22,7 +22,6 @@ class OnlineUI:
         self.create_ui()
 
     def create_ui(self):
-        # Create frames
         self.page1 = tk.Frame(self.root)
         self.page2 = tk.Frame(self.root)
         self.page1.pack(fill="both", expand=True)
