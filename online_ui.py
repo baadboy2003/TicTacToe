@@ -45,7 +45,7 @@ class OnlineUI:
             row_buttons = []
             for j in range(3):
                 button = tk.Button(self.page2, text="", width=10, height=5,
-                                   command=lambda i=i, j=j: self.send_coordinate(i, j))
+                                   command=lambda i=i, j=j: self.send_coordinate(i, j)) # this is what sends the corrdinates 
                 button.grid(row=i, column=j)
                 row_buttons.append(button)
             self.buttons.append(row_buttons)
@@ -91,7 +91,7 @@ class OnlineUI:
         except Exception as e:
             print(f"Error during disconnection: {e}")
 
-    def send_coordinate(self, row, col):
+    def send_coordinate(self, row, col): # this sends the row and cloumn that are selected to server 
         if not self.turn or not self.game_in_progress:
             print("Not your turn or game over!")
             return
@@ -156,14 +156,12 @@ class OnlineUI:
     def update_board(self, row, col, player_mark):
         self.buttons[row][col].config(text=player_mark, state='disabled')
 
-    def show_frame(self, frame):
+    def show_frame(self, frame):      #this basically updates the frames 
         frame.tkraise()
 
-    def go_back_home(self):
-        # Destroy all widgets in the root window
+    def go_back_home(self):           # to show go back to the home page ,it is bascailly done by destroying this page and then adding a new page 
+        
         for widget in self.root.winfo_children():
             widget.destroy()
-        
-        # Recreate and display the home screen
         self.home_screen.create_home_screen()
         self.show_frame(self.home_screen.page1)
