@@ -17,7 +17,7 @@ class TicTacToeGame:
     def board_full(self):
         return " " not in self.board
 
-    def minimax(self, board, depth, is_maximizing, max_depth=3):
+    def minimax(self, board, depth, is_maximizing, max_depth=50):
         if self.check_winner("O"):
             return 1
         if self.check_winner("X"):
@@ -50,7 +50,7 @@ class TicTacToeGame:
         for i in range(9):
             if self.board[i] == " ":
                 self.board[i] = "O"
-                score = self.minimax(self.board, 0, False, max_depth=3)
+                score = self.minimax(self.board, 0, False, max_depth=9)
                 self.board[i] = " "
                 if score > best_score:
                     best_score = score
@@ -72,3 +72,4 @@ class TicTacToeGame:
         self.current_player = "X"
         self.game_over = False  # Reset game over state
         print("Reset to player: ", self.current_player)
+

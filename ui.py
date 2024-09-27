@@ -1,5 +1,6 @@
 import tkinter as tk
 from tkinter import messagebox
+from PIL import Image, ImageTk
 
 class TicTacToeUI:
     def __init__(self, root, game, home_screen):
@@ -7,13 +8,45 @@ class TicTacToeUI:
         self.game = game
         self.home_screen = home_screen
         self.buttons = []
+        self.button_images = [None] * 9
         self.create_board()
         self.create_controls()
+        root.geometry("540x555")
+        root.resizable(False, False)
+        self.empty_image = ImageTk.PhotoImage(Image.new('RGB', (200, 200), color=(192, 192, 192)))
+
+        # Load images
+        self.x_image = Image.open("Cross_m.png")
+        self.o_image = Image.open("Circle_m.png")
+
+        # Resize images
+        self.x_image = self.x_image.resize((175, 165), resample=Image.BICUBIC)
+        self.o_image = self.o_image.resize((175, 165), resample=Image.BICUBIC)
+
+        # Convert images to PhotoImage
+        self.x_photo = ImageTk.PhotoImage(self.x_image)
+        self.o_photo = ImageTk.PhotoImage(self.o_image)
+
+        self.x_wins = 0
+        self.o_wins = 0
+        self.game_count = 0
 
     def update_board(self):
         print(self.game.board)
         for i, button in enumerate(self.buttons):
-            button.config(text=self.game.board[i])
+            if self.game.board[i] == 'X':
+                if self.button_images[i] is None:
+                    button.image = self.x_photo
+                    self.button_images[i] = self.x_photo  # Store the image reference
+                button.config(image=self.x_photo)
+            elif self.game.board[i] == 'O':
+                if self.button_images[i] is None:
+                    button.image = self.o_photo
+                    self.button_images[i] = self.o_photo  # Store the image reference
+                button.config(image=self.o_photo)
+            else:
+                button.config(image=self.empty_image)  # Use the empty image when the space is empty
+                self.button_images[i] = None
 
     def player_move(self, idx):
         if self.game.game_over:  # Check if the game is over
@@ -23,13 +56,19 @@ class TicTacToeUI:
             self.update_board()
             print("1")
             if self.game.check_winner(self.game.current_player):
-                messagebox.showinfo("Tic-Tac-Toe", f"{self.game.current_player} wins!")
-                self.game.game_over = True  # Set game as over
+                if self.game.current_player == "X":
+                    self.x_wins += 1
+                else:
+                    self.o_wins += 1
+                self.game_count += 1
+                messagebox.showinfo("Tic-Tac-Toe", f"{self.game.current_player} wins this game!")
                 self.reset_board()  # Reset the board after showing the messagebox
+                self.check_winner()
             elif self.game.board_full():
+                self.game_count += 1
                 messagebox.showinfo("Tic-Tac-Toe", "It's a draw!")
-                self.game.game_over = True  # Set game as over
                 self.reset_board()  # Reset the board after showing the messagebox
+                self.check_winner()
             else:
                 self.game.switch_player()
                 print("1 33")
@@ -40,48 +79,72 @@ class TicTacToeUI:
                         self.update_board()
                         print("2")
                         if self.game.check_winner("O"):
-                            messagebox.showinfo("Tic-Tac-Toe", "AI wins!")
-                            self.game.game_over = True  # Set game as over
-                            self.restart_game()  # Reset the board after showing the messagebox
-                            return
+                            self.o_wins += 1
+                            self.game_count += 1
+                            messagebox.showinfo("Tic-Tac-Toe", "AI wins this game!")
+                            self.reset_board()  # Reset the board after showing the messagebox
+                            self.check_winner()
                         elif self.game.board_full():
+                            self.game_count += 1
                             messagebox.showinfo("Tic-Tac-Toe", "It's a draw!")
-                            self.game.game_over = True  # Set game as over
-                            self.restart_game()  # Reset the board after showing the messagebox
-                            return
+                            self.reset_board()  # Reset the board after showing the messagebox
+                            self.check_winner()
                     self.game.switch_player()
                     print("1 34")
 
-
-
-    def create_board(self):
-        for i in range(9):
-            button = tk.Button(self.root, text=" ", font=("Arial", 24), width=5, height=2,
-                               command=lambda i=i: self.player_move(i))
-            button.grid(row=i//3, column=i%3)
-            self.buttons.append(button)
-
-    def create_controls(self):
-        restart_button = tk.Button(self.root, text="Restart", font=("Arial", 16),
-                                   command=self.restart_game)
-        restart_button.grid(row=3, column=0, columnspan=2, sticky="ew")
-
-        back_button = tk.Button(self.root, text="Back to Home", font=("Arial", 16),
-                                command=self.go_back_home)
-        back_button.grid(row=3, column=2, columnspan=2, sticky="ew")
-
-    def restart_game(self):
-        self.game.reset_game()
-        self.update_board()
-        print("3")
+    def check_winner(self):
+        if self.x_wins == 2:
+            messagebox.showinfo("Tic-Tac-Toe", "X wins the best 2 out of 3!")
+            self.go_back_home()
+        elif self.o_wins == 2:
+            messagebox.showinfo("Tic-Tac-Toe", "O wins the best 2 out of 3!")
+            self.go_back_home()
 
     def go_back_home(self):
         for widget in self.root.winfo_children():
             widget.destroy()
         self.home_screen.create_home_screen()
-    
+
+    def create_board(self):
+        for i in range(9):
+            button = tk.Button(self.root, text=" ", font=("Arial", 24), width=9, height=6,
+                               command=lambda i=i: self.player_move(i), fg="red", bg="silver")
+            button.grid(row=i // 3, column=i % 3, sticky="nsew")  # Add sticky="nsew" to make the button expand
+            self.buttons.append(button)
+
+
+        # Configure the rows and columns to have a minimum size
+        for i in range(3):
+            self.root.grid_rowconfigure(i, minsize=150, weight=1)  # Set the minimum row size to 150 pixels and weight to 1
+            self.root.grid_columnconfigure(i, minsize=150, weight=1)  # Set the minimum column size to 150 pixels and weight to 1
+
+    def create_controls(self):
+        restart_button = tk.Button(self.root, text="Restart", font=("tahoma", 16), command=self.restart_game,
+                                   fg="white", bg="gray")
+        restart_button.grid(row=3, column=0, columnspan=2,
+                            sticky="ew")  # Add sticky="ew" to make the button expand horizontally
+
+        back_button = tk.Button(self.root, text="Back to Home", font=("tahoma", 16), command=self.go_back_home,
+                                fg="white", bg="gray")
+        back_button.grid(row=3, column=2, columnspan=2, sticky="ew")
+
+    def restart_game(self):
+        self.game.reset_game()
+        self.game.game_over = False  # Reset game_over attribute
+        for i, button in enumerate(self.buttons):
+            button.config(image=self.empty_image)  # Clear the button's image with the empty image
+            self.button_images[i] = None  # Clear the image reference
+            button.config(text=" ")
+            button.config(state="normal")
+
+    def go_back_home(self):
+        for widget in self.root.winfo_children():
+            widget.destroy()
+        self.home_screen.create_home_screen()
+
     def reset_board(self):
         self.game.reset_game()
         self.update_board()
-        print("4")
+        for button in self.buttons:
+            button.config(state="normal")
 
