@@ -1,6 +1,7 @@
 import tkinter as tk
 from tkinter import messagebox
 from PIL import Image, ImageTk
+from pygame import mixer
 
 class TicTacToeUI:
     def __init__(self, root, game, home_screen):
@@ -49,6 +50,12 @@ class TicTacToeUI:
                 self.button_images[i] = None
 
     def player_move(self, idx):
+
+        mixer.init()
+        sound2 = r'ButtonPlate Click (Minecraft Sound) - Sound Effect for editing.mp3'
+        sound2_channel = mixer.Channel(1)  # Create a new channel for the second sound
+        sound2_channel.play(mixer.Sound(sound2))
+
         if self.game.game_over:  # Check if the game is over
             return
 
@@ -119,6 +126,12 @@ class TicTacToeUI:
             self.root.grid_columnconfigure(i, minsize=150, weight=1)  # Set the minimum column size to 150 pixels and weight to 1
 
     def create_controls(self):
+
+        mixer.init()
+        sound2 = r'ButtonPlate Click (Minecraft Sound) - Sound Effect for editing.mp3'
+        sound2_channel = mixer.Channel(1)  # Create a new channel for the second sound
+        sound2_channel.play(mixer.Sound(sound2))
+
         restart_button = tk.Button(self.root, text="Restart", font=("tahoma", 16), command=self.restart_game,
                                    fg="white", bg="gray")
         restart_button.grid(row=3, column=0, columnspan=2,

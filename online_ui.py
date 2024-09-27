@@ -1,6 +1,7 @@
 import tkinter as tk
 import socket
 import threading
+from pygame import mixer
 
 PORT = 1000       #port for the server 
 SERVER = socket.gethostbyname(socket.gethostname()) # basiclly gets the ip of the local laptop 
@@ -22,6 +23,12 @@ class OnlineUI:
         self.create_ui()
 
     def create_ui(self):
+
+        mixer.init()
+        sound2 = r'ButtonPlate Click (Minecraft Sound) - Sound Effect for editing.mp3'
+        sound2_channel = mixer.Channel(1)  # Create a new channel for the second sound
+        sound2_channel.play(mixer.Sound(sound2))
+
         self.page1 = tk.Frame(self.root)
         self.page2 = tk.Frame(self.root)
         self.page1.pack(fill="both", expand=True)
@@ -92,6 +99,12 @@ class OnlineUI:
             print(f"Error during disconnection: {e}")
 
     def send_coordinate(self, row, col): # this sends the row and cloumn that are selected to server 
+
+        mixer.init()
+        sound2 = r'ButtonPlate Click (Minecraft Sound) - Sound Effect for editing.mp3'
+        sound2_channel = mixer.Channel(1)  # Create a new channel for the second sound
+        sound2_channel.play(mixer.Sound(sound2))
+        
         if not self.turn or not self.game_in_progress:
             print("Not your turn or game over!")
             return
