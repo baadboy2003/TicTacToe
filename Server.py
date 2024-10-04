@@ -85,6 +85,16 @@ def handle_client(conn, addr):
     print(f"[DISCONNECTED] {addr} disconnected.")
     clients.remove(conn)
     conn.close()
+    
+    # Handle disconnection: reset the game and notify all clients
+    notify_disconnect(player)  # Notify the remaining player of disconnection
+    reset_game()  # Reset the game when any player disconnects
+
+def notify_disconnect(disconnecting_player):
+    """Notifies the other player that one player has disconnected."""
+    for client in clients:
+        if client != disconnecting_player:
+            send_message_to_client(client, "DISCONNECT")  # Send disconnection message
 
 def reset_game():
     global board
