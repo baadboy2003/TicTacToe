@@ -75,7 +75,7 @@ class GIFLabel(tk.Label):
 
 class HomeScreen:
     def __init__(self, root):
-        
+         
         mixer.init()
         background_music = r'RobTop - Geometry Dash Menu Theme.mp3'
         mixer.music.load(background_music)
