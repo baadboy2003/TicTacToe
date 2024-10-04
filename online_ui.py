@@ -1,15 +1,15 @@
 import tkinter as tk
 import socket
 import threading
-from pygame import mixer
+from PIL import Image, ImageTk
 
-PORT = 1000       #port for the server 
-SERVER = socket.gethostbyname(socket.gethostname()) # basiclly gets the ip of the local laptop 
-ADDR = (SERVER, PORT) # combines server and port   
+PORT = 1000       # port for the server 
+SERVER = socket.gethostbyname(socket.gethostname())  # gets the IP of the local machine
+ADDR = (SERVER, PORT)  # combines server and port   
 FORMAT = 'utf-8'      
 HEADER = 64
-DISCONNECT_MESSAGE = "D"  # message for disconnetion sent to the server 
-GAME_OVER_MESSAGE = "GAME_OVER" # message when the game is over 
+DISCONNECT_MESSAGE = "D"  # message for disconnection sent to the server 
+GAME_OVER_MESSAGE = "GAME_OVER"  # message when the game is over
 
 class OnlineUI:
     def __init__(self, root, home_screen):
@@ -20,42 +20,63 @@ class OnlineUI:
         self.turn = False
         self.game_in_progress = True
         self.buttons = []
+        self.button_images = [None] * 9
         self.create_ui()
 
-    def create_ui(self):
+        # Load images
+        self.empty_image = ImageTk.PhotoImage(Image.new('RGB', (200, 200), color=(192, 192, 192)))
+        self.x_image = Image.open("Cross_m.png")
+        self.o_image = Image.open("Circle_m.png")
+        self.x_image = self.x_image.resize((175, 165), resample=Image.BICUBIC)
+        self.o_image = self.o_image.resize((175, 165), resample=Image.BICUBIC)
+        self.x_photo = ImageTk.PhotoImage(self.x_image)
+        self.o_photo = ImageTk.PhotoImage(self.o_image)
 
-        mixer.init()
-        sound2 = r'ButtonPlate Click (Minecraft Sound) - Sound Effect for editing.mp3'
-        sound2_channel = mixer.Channel(1)  # Create a new channel for the second sound
-        sound2_channel.play(mixer.Sound(sound2))
-
-        self.page1 = tk.Frame(self.root)
-        self.page2 = tk.Frame(self.root)
-        self.page1.pack(fill="both", expand=True)
-        self.page2.pack(fill="both", expand=True)
+        # Show the home screen initially
         
-        # Create UI for page1 (Home screen)
-        connect_button = tk.Button(self.page1, text="Connect", command=self.connect_button)
-        connect_button.pack(padx=20, pady=20)
 
-        back_button = tk.Button(self.page1, text="Back to Home", command=self.go_back_home)
-        back_button.pack(padx=20, pady=20)
+    def create_ui(self):
+        
+        self.page2 = tk.Frame(self.root)
+    
+        self.page2.pack(fill="both", expand=True)
 
         # Create UI for page2 (Game board)
         self.create_board()
 
-        disconnect_button = tk.Button(self.page2, text="Disconnect", command=self.send_disconnect_message)
-        disconnect_button.grid(row=3, column=1, padx=20, pady=20)
+        # Create control buttons for page2
+        self.create_controls()
+
+        # Add Connect button on page2
+        self.create_connect_button()
 
     def create_board(self):
+        for i in range(9):
+            button = tk.Button(self.page2, text=" ", font=("Arial", 24), width=9, height=6,
+                               command=lambda i=i: self.send_coordinate(i // 3, i % 3), fg="red", bg="silver")
+            button.grid(row=i // 3, column=i % 3, sticky="nsew")
+            self.buttons.append(button)
+
+        # Configure rows and columns to ensure layout matches TicTacToeUI
         for i in range(3):
-            row_buttons = []
-            for j in range(3):
-                button = tk.Button(self.page2, text="", width=10, height=5,
-                                   command=lambda i=i, j=j: self.send_coordinate(i, j)) # this is what sends the corrdinates 
-                button.grid(row=i, column=j)
-                row_buttons.append(button)
-            self.buttons.append(row_buttons)
+            self.page2.grid_rowconfigure(i, minsize=150, weight=1)
+            self.page2.grid_columnconfigure(i, minsize=150, weight=1)
+
+    def create_controls(self):
+        # Create Back to Home button on page2
+        back_button = tk.Button(self.page2, text="Back to Home", font=("tahoma", 16), command=self.go_back_home,
+                                fg="white", bg="gray")
+        back_button.grid(row=3, column=0, sticky="ew", padx=10, pady=10)
+
+        # Create Disconnect button on page2
+        disconnect_button = tk.Button(self.page2, text="Disconnect", font=("tahoma", 16), command=self.send_disconnect_message,
+                                       fg="white", bg="gray")
+        disconnect_button.grid(row=3, column=1, sticky="ew", padx=10, pady=10)
+
+    def create_connect_button(self):
+        connect_button = tk.Button(self.page2, text="Connect", font=("tahoma", 16), command=self.connect_button,
+                                    fg="white", bg="gray")
+        connect_button.grid(row=3, column=2, sticky="ew", padx=10, pady=10)
 
     def connect_button(self):
         if self.client is not None and self.client.fileno() != -1:
@@ -72,7 +93,6 @@ class OnlineUI:
                 print(f"Connected as player {self.player}")
                 if self.player == 'X':
                     self.turn = True
-            self.show_frame(self.page2)
             receive_thread = threading.Thread(target=self.receive_messages, daemon=True)
             receive_thread.start()
         except Exception as e:
@@ -98,13 +118,7 @@ class OnlineUI:
         except Exception as e:
             print(f"Error during disconnection: {e}")
 
-    def send_coordinate(self, row, col): # this sends the row and cloumn that are selected to server 
-
-        mixer.init()
-        sound2 = r'ButtonPlate Click (Minecraft Sound) - Sound Effect for editing.mp3'
-        sound2_channel = mixer.Channel(1)  # Create a new channel for the second sound
-        sound2_channel.play(mixer.Sound(sound2))
-        
+    def send_coordinate(self, row, col):
         if not self.turn or not self.game_in_progress:
             print("Not your turn or game over!")
             return
@@ -125,7 +139,7 @@ class OnlineUI:
                     msg_length = int(msg_length)
                     msg = self.client.recv(msg_length).decode(FORMAT)
                     print(f"Received from server: {msg}")
-                    
+
                     if msg.startswith("MOVE"):
                         _, p, row, col = msg.split(':')
                         self.update_board(int(row), int(col), p)
@@ -143,14 +157,19 @@ class OnlineUI:
                     elif msg == GAME_OVER_MESSAGE:
                         print("Game over, returning to home.")
                         self.game_over("Game Over!")
+                    elif msg == "DISCONNECT":  # New message for disconnection
+                        print("The other player has disconnected. You will be disconnected too.")
+                        self.send_disconnect_message()  # Disconnect yourself
+                        break
             except Exception as e:
                 print(f"Error receiving message: {e}")
                 break
 
+
     def reset_board(self):
         for row in range(3):
             for col in range(3):
-                self.buttons[row][col].config(text="", state='normal')
+                self.buttons[row * 3 + col].config(image=self.empty_image, state='normal')
         self.game_in_progress = True
         self.turn = (self.player == 'X')
 
@@ -167,14 +186,17 @@ class OnlineUI:
         ok_button.pack(pady=5)
 
     def update_board(self, row, col, player_mark):
-        self.buttons[row][col].config(text=player_mark, state='disabled')
+        if player_mark == 'X':
+            self.buttons[row * 3 + col].config(image=self.x_photo, state='disabled')
+        elif player_mark == 'O':
+            self.buttons[row * 3 + col].config(image=self.o_photo, state='disabled')
+        else:
+            self.buttons[row * 3 + col].config(image=self.empty_image, state='normal')
 
-    def show_frame(self, frame):      #this basically updates the frames 
-        frame.tkraise()
+    
 
-    def go_back_home(self):           # to show go back to the home page ,it is bascailly done by destroying this page and then adding a new page 
-        
+    def go_back_home(self):
         for widget in self.root.winfo_children():
             widget.destroy()
         self.home_screen.create_home_screen()
-        self.show_frame(self.home_screen.page1)
+        
