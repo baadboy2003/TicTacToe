@@ -91,11 +91,13 @@ class TicTacToeUI:
                             messagebox.showinfo("Tic-Tac-Toe", "AI wins this game!")
                             self.reset_board()  # Reset the board after showing the messagebox
                             self.check_winner()
+                            return
                         elif self.game.board_full():
                             self.game_count += 1
                             messagebox.showinfo("Tic-Tac-Toe", "It's a draw!")
                             self.reset_board()  # Reset the board after showing the messagebox
                             self.check_winner()
+                            return
                     self.game.switch_player()
                     print("1 34")
 
