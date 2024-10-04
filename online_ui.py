@@ -25,8 +25,8 @@ class OnlineUI:
 
         # Load images
         self.empty_image = ImageTk.PhotoImage(Image.new('RGB', (200, 200), color=(192, 192, 192)))
-        self.x_image = Image.open(r"C:\Users\zahin\Downloads\INF_grp7\inf_grp7\inf_grp7\Cross_m.png")
-        self.o_image = Image.open(r"C:\Users\zahin\Downloads\INF_grp7\inf_grp7\inf_grp7\Circle_m.png")
+        self.x_image = Image.open("Cross_m.png")
+        self.o_image = Image.open("Circle_m.png")
         self.x_image = self.x_image.resize((175, 165), resample=Image.BICUBIC)
         self.o_image = self.o_image.resize((175, 165), resample=Image.BICUBIC)
         self.x_photo = ImageTk.PhotoImage(self.x_image)
