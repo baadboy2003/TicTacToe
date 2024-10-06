@@ -120,6 +120,16 @@ class TicTacToeUI:
         elif self.o_wins == 2:
             messagebox.showinfo("Tic-Tac-Toe", "O wins the best 2 out of 3!")
             self.go_back_home()
+        elif self.game_count == 3:
+            if self.x_wins > self.o_wins:
+                messagebox.showinfo("Tic-Tac-Toe", "X wins!")
+                self.go_back_home()
+            elif self.x_wins < self.o_wins:
+                messagebox.showinfo("Tic-Tac-Toe", "O wins!")
+                self.go_back_home()
+            else:
+                messagebox.showinfo("Tic-Tac-Toe", "It is a draw!")
+                self.go_back_home()
 
     def go_back_home(self):
         for widget in self.root.winfo_children():
