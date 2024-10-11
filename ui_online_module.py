@@ -1,7 +1,7 @@
 import socket
 import threading
 import tkinter as tk
-from base_ui_mod import TicTacToeBaseUI
+from ui_base_module import TicTacToeBaseUI
 
 PORT = 1000       # port for the server 
 SERVER = socket.gethostbyname(socket.gethostname())  # gets the IP of the local machine

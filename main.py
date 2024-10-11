@@ -1,5 +1,5 @@
 from tkinter import Tk
-from home_screen import HomeScreen
+from ui_home import HomeScreen
 
 def main():
     root = Tk()

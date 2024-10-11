@@ -1,11 +1,9 @@
 import tkinter as tk
-from game import TicTacToeGame
-from ui import TicTacToeUI
-from online_ui_mod import TicTacToeOnlineUI
-from local_ui_mod import TicTacToeLocalUI
-from online_ui import OnlineUI
+from game_logic import TicTacToeGame
+from ui_online_module import TicTacToeOnlineUI
+from ui_local_module import TicTacToeLocalUI
 from pygame import mixer
-from gif_label import GIFLabel  # Import the GIFLabel class
+from gif_background import GIFLabel  # Import the GIFLabel class
 
 
 class HomeScreen:
@@ -30,7 +28,7 @@ class HomeScreen:
         self.root.title("Tic-Tac-Toe: Select Mode")
 
         # Background GIF
-        gif_label = GIFLabel(self.root, r"arcadegiflol.gif")
+        gif_label = GIFLabel(self.root, r"background.gif")
         gif_label.pack(fill="both", expand=True)
         gif_label.place(relx=0, rely=0, relwidth=1, relheight=1)  # Background label behind all widgets
         self.home_widgets.append(gif_label)

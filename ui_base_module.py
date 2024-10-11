@@ -2,7 +2,7 @@ import tkinter as tk
 from tkinter import messagebox
 from PIL import Image, ImageTk
 from pygame import mixer
-from gif_label import GIFLabel  # Import the GIFLabel class
+from gif_background import GIFLabel  # Import the GIFLabel class
 
 class TicTacToeBaseUI:
 
@@ -16,7 +16,7 @@ class TicTacToeBaseUI:
         self.home_screen.hide_home_screen()
 
         # Add the GIF background
-        gif_label = GIFLabel(self.root, r"arcadegiflol.gif")
+        gif_label = GIFLabel(self.root, r"background.gif")
         gif_label.pack(fill="both", expand=True)
         gif_label.place(relx=0, rely=0, relwidth=1, relheight=1)
 
