@@ -14,7 +14,7 @@ from PIL import Image, ImageTk
 # from ui import TicTacToeUI
 # from online_ui import OnlineUI
 # from home_screen import HomeScreen
-
+# Hi
 PORT = 1000       #port for the server 
 SERVER = socket.gethostbyname(socket.gethostname()) # basiclly gets the ip of the local laptop 
 ADDR = (SERVER, PORT) # combines server and port   

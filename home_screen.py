@@ -1,6 +1,8 @@
 import tkinter as tk
 from game import TicTacToeGame
 from ui import TicTacToeUI
+from online_ui_mod import TicTacToeOnlineUI
+from local_ui_mod import TicTacToeLocalUI
 from online_ui import OnlineUI
 from pygame import mixer
 from gif_label import GIFLabel  # Import the GIFLabel class
@@ -74,7 +76,7 @@ class HomeScreen:
     def start_multiplayer_online(self):
         """Start Multiplayer Online mode."""
         self.clear_screen()  # Clear home screen widgets
-        OnlineUI(self.root, self)  # Switch to online multiplayer UI
+        TicTacToeOnlineUI(self.root, self)  # Switch to online multiplayer UI
 
     def clear_screen(self):
         """Clear the current screen by destroying all widgets."""
@@ -90,4 +92,4 @@ class HomeScreen:
             game = TicTacToeGame(ai_enabled=False)
 
         # Switch to the game UI
-        TicTacToeUI(self.root, game, self)
+        TicTacToeLocalUI(self.root, game, self)
