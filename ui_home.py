@@ -26,7 +26,7 @@ class HomeScreen:
         """
         # Initialize pygame mixer and play background music
         mixer.init()
-        background_music = r'RobTop - Geometry Dash Menu Theme.mp3'
+        background_music = r'./assets/RobTop - Geometry Dash Menu Theme.mp3'
         mixer.music.load(background_music)
         mixer.music.play(-1)  # Loop indefinitely
 
@@ -47,7 +47,7 @@ class HomeScreen:
         self.root.title("Tic-Tac-Toe: Select Mode")
 
         # Add the background GIF using the custom GIFLabel widget
-        gif_label = GIFLabel(self.root, r"background.gif")
+        gif_label = GIFLabel(self.root, r"./assets/background.gif")
         gif_label.pack(fill="both", expand=True)
         gif_label.place(relx=0, rely=0, relwidth=1, relheight=1)  # Set the GIF as the background
         self.home_widgets.append(gif_label)  # Store widget reference

@@ -42,7 +42,7 @@ class TicTacToeBaseUI:
         self.home_screen.hide_home_screen()
 
         # Add the GIF background using the custom GIFLabel widget
-        gif_label = GIFLabel(self.root, r"background.gif")
+        gif_label = GIFLabel(self.root, r"./assets/background.gif")
         gif_label.pack(fill="both", expand=True)
         gif_label.place(relx=0, rely=0, relwidth=1, relheight=1)  # Fill the entire window with the GIF
 
@@ -50,8 +50,8 @@ class TicTacToeBaseUI:
         self.empty_image = ImageTk.PhotoImage(Image.new('RGB', (100, 100), color=(217, 19, 59)))  # Red placeholder
 
         # Load, resize, and prepare images for X and O markers
-        self.x_image = Image.open("Cross_m.png").resize((100, 100), resample=Image.BICUBIC)
-        self.o_image = Image.open("Circle_m.png").resize((100, 100), resample=Image.BICUBIC)
+        self.x_image = Image.open("./assets/Cross_m.png").resize((100, 100), resample=Image.BICUBIC)
+        self.o_image = Image.open("./assets/Circle_m.png").resize((100, 100), resample=Image.BICUBIC)
         self.x_photo = ImageTk.PhotoImage(self.x_image)
         self.o_photo = ImageTk.PhotoImage(self.o_image)
 
