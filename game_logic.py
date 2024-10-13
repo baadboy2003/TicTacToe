@@ -18,31 +18,47 @@ class TicTacToeGame:
         return " " not in self.board
 
     def minimax(self, board, depth, is_maximizing, max_depth=50):
+        # Base case: Check if the AI (O) has won
         if self.check_winner("O"):
-            return 1
+            return 1  # AI win
+        
+        # Base case: Check if the opponent (X) has won
         if self.check_winner("X"):
-            return -1
-        if self.board_full() or depth == max_depth:  # Stop at a certain depth
-            return 0
-
+            return -1  # Opponent win
+        
+        # Base case: If the board is full or the maximum depth is reached, it's a draw
+        if self.board_full() or depth == max_depth:
+            return 0  # Draw
+    
+        # Recursive case: If it's the AI's turn (maximizing player)
         if is_maximizing:
-            best_score = -float('inf')
+            best_score = -float('inf')  # Initialize best score to negative infinity
+            # Loop through all 9 spaces on the board
             for i in range(9):
+                # If the spot is empty, simulate the AI's move
                 if board[i] == " ":
-                    board[i] = "O"
+                    board[i] = "O"  # Place AI's marker ('O')
+                    # Recursively call minimax for the opponent's turn (minimizing player)
                     score = self.minimax(board, depth + 1, False, max_depth)
-                    board[i] = " "
+                    board[i] = " "  # Undo the move (backtrack)
+                    # Maximize the score
                     best_score = max(score, best_score)
-            return best_score
+            return best_score  # Return the best score found
+    
+        # Recursive case: If it's the opponent's turn (minimizing player)
         else:
-            best_score = float('inf')
+            best_score = float('inf')  # Initialize best score to positive infinity
+            # Loop through all 9 spaces on the board
             for i in range(9):
+                # If the spot is empty, simulate the opponent's move
                 if board[i] == " ":
-                    board[i] = "X"
+                    board[i] = "X"  # Place opponent's marker ('X')
+                    # Recursively call minimax for the AI's next move (maximizing player)
                     score = self.minimax(board, depth + 1, True, max_depth)
-                    board[i] = " "
+                    board[i] = " "  # Undo the move (backtrack)
+                    # Minimize the score
                     best_score = min(score, best_score)
-            return best_score
+            return best_score  # Return the best score found
 
     def ai_move(self):
         best_score = -float('inf')
